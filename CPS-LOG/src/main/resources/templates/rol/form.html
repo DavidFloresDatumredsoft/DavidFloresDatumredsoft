@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  	 layout:decorate="~{plantilla.html}">
+<head>
+    <title>Roles</title>
+    
+</head>
+<body>
+<div class="container" layout:fragment="container" id="container_rol_form">
+
+    <h2>Rol Formulario</h2>
+    <div th:if="${session.rol eq 'Administrador'}">
+        <form class="form-horizontal" th:object="${rolform}" th:action="@{/rol/rol}" method="post">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                <p th:text="#{form.hasErrors}">Error Message</p>
+            </div>
+
+            <input type="hidden" th:field="*{codigoRol}"/>
+
+            <div class="form-group" th:class="${#fields.hasErrors('nombreRol')} ? 'form-group has-error' : 'form-group'">
+                <label class="col-sm-2 control-label">NOMBRE ROL:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{nombreRol}" th:errorclass="has-error"/>
+
+                    <span class="help-block">
+                       <ul>
+                           <li th:each="err : ${#fields.errors('nombreRol')}" th:text="${err}" />
+                       </ul>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

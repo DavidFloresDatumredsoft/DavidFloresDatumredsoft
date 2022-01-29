@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  	 layout:decorate="~{plantilla.html}">
+<head>
+    <title>Permiso Rol</title>
+    
+</head>
+<body>
+<div class="container" layout:fragment="container" id="container_list_rol">
+
+    <h2>Permiso Rol</h2>
+    <div  th:if="${session.rol == 'Administrador'}" >
+    	
+        <form class="form-horizontal" th:object="${permisoRolForm}" th:action="@{/permiso-rol/permiso-rol}" method="post">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                <p th:text="#{form.hasErrors}">Error Message</p>
+            </div>
+            <div class="alert alert-danger" th:if="${param.error}" id="error"
+				th:utext="${param.error}">
+			</div>
+			
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="form-group" th:class="${#fields.hasErrors('id')} ? 'form-group has-error' : 'form-group'">
+                <label class="col-sm-2 control-label">Rol:</label>
+                <div class="col-sm-10">
+
+					<select class="form-control" th:field="*{nombreRol}" th:errorclass="has-error" required="required">
+						<option th:each="rol : ${ rolesDisponibles }"
+								th:value="${rol.nombreRol}"
+								th:text="${rol.nombreRol}"
+						/>
+					</select>
+                    <span class="help-block">
+                       <ul>
+                           <li th:each="err : ${#fields.errors('nombreRol')}" th:text="${err}" />
+                       </ul>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group" th:class="${#fields.hasErrors('usuarioAD')} ? 'form-group has-error' : 'form-group'">
+                <label class="col-sm-2 control-label">Usuario AD:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{usuarioAD}" th:errorclass="has-error" required="required"/>
+
+                    <span class="help-block">
+                       <ul>
+                           <li th:each="err : ${#fields.errors('usuarioAD')}" th:text="${err}" />
+                       </ul>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group" th:class="${#fields.hasErrors('estado')} ? 'form-group has-error' : 'form-group'">
+                <label class="col-sm-2 control-label">Estado:</label>
+                <div class="col-sm-10">
+
+					<select class="form-control" th:field="*{estado}" th:errorclass="has-error">
+						<option th:each="estado: ${ T( com.confia.cps.log.view.domain.type.EEstadoPermisoRol).values() }"
+								th:value="${estado}"
+								th:text="${estado}"
+						/>
+					</select>
+                    <span class="help-block">
+                       <ul>
+                           <li th:each="err : ${#fields.errors('estado')}" th:text="${err}" />
+                       </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-default w-100 btn btn-lg btn-primary">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

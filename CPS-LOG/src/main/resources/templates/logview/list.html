@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{plantilla.html}">
+<head>
+<title>Log viewer</title>
+<th:block layout:fragment="css_block">
+<link th:href="@{/resource/DataTables/datatables.min.css}" rel="stylesheet" >
+</th:block>
+</head>
+<body>
+	<div class="container" layout:fragment="container"
+		id="container_list_rol">
+
+		<h2>Log cps</h2>
+
+		<form action="#" th:action="@{/log/view}" th:object="${formSearch}"
+			method="post">
+			<div class="row">
+				<div class="col">
+					<select class="form-control" th:field="*{tipoDoc}" th:errorclass="has-error" required="required">
+						<option th:each="documento : ${ listaDocumentos }"
+								th:value="${documento.key}"
+								th:text="${documento.value}"
+						/>
+					</select>
+				</div>
+				<div class="col">
+					<input type="text" class="form-control" th:field="*{numDoc}"
+						placeholder="Numero de documento" required="required"/>
+				</div>
+				<div class="col">
+					<input type="submit" value="Buscar" class="btn btn-primary" /> 
+					<input type="reset" value="Limpiar" class="btn btn-secondary" />
+					<a th:href="@{/log/export}" class="btn btn-success">Exportar a CSV</a>
+				</div>
+				
+			</div>
+		</form>
+		<br />
+
+		<div th:if="${not #lists.isEmpty(logviews)}">
+
+			<table class="table table-striped" id="log_table">
+				<thead>
+					<tr>
+						<th scope="col">DOCUMENTO</th>
+						<th scope="col">FECHA</th>
+						<th scope="col">CATEGORIA</th>
+						<th scope="col">MENSAJE</th>
+						<th scope="col">ORIGEN</th>
+						<th scope="col">MODIFICADO POR</th>					
+						<th scope="col">MODIFICADO EN</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="itemRow : ${logviews}">
+						<td th:text="${itemRow.documentoNumero}"></td>
+						<td th:text="${itemRow.fecha}"></td>
+						<td th:text="${itemRow.categoria}"></td>
+						<td th:text="${itemRow.mensaje}"></td>
+						<td th:text="${itemRow.origen}"></td>
+						<td th:text="${itemRow.modificadoPor}"></td>
+						<td >
+							<ul>
+								<li th:each="campo : ${itemRow.modificaciones}" th:utext="${campo}" /> 
+							</ul>
+						</td>
+						<td><a th:href="@{/log/show/{id} (id=${itemRow.id})}"> 
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+									fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+							  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+							  <path
+										d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+							</svg>
+						</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+     <th:block layout:fragment="js_block">
+     	<script th:src="@{/resource/jquery-3.5.1/jquery-3.5.1.js}" ></script>
+		<script th:src="@{/resource/DataTables/datatables.min.js}" ></script>     
+		
+		<script type="text/javascript">
+
+		// Disable search and ordering by default
+		$.extend( $.fn.dataTable.defaults, {
+		    searching: false,
+		    ordering:  false
+		} ); 
+		
+			    $('#log_table').DataTable({
+			    	ordering: true,
+			    	paging: false
+				    });
+			
+			
+			 
+			
+		</script>
+     </th:block>
+</body>
+</html>
